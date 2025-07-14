@@ -1,0 +1,509 @@
+basePath: /api/v1
+definitions:
+  models.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  models.Brand:
+    description: Brand data structure for catalog items
+    properties:
+      cover_image:
+        example: https://example.com/apple.png
+        type: string
+      created_at:
+        example: "2025-07-09T15:04:05Z"
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Apple
+        maxLength: 100
+        minLength: 2
+        type: string
+      updated_at:
+        example: "2025-07-09T15:04:05Z"
+        type: string
+    required:
+    - cover_image
+    - name
+    type: object
+  models.Category:
+    description: Category data structure for organizing products
+    properties:
+      cover_image:
+        example: https://example.com/smartphones.jpg
+        type: string
+      created_at:
+        example: "2025-07-09T15:04:05Z"
+        type: string
+      id:
+        example: 1
+        type: integer
+      title:
+        example: Smartphones
+        maxLength: 100
+        minLength: 2
+        type: string
+      updated_at:
+        example: "2025-07-09T15:04:05Z"
+        type: string
+    required:
+    - cover_image
+    - title
+    type: object
+  models.Product:
+    description: Product data structure
+    properties:
+      brand:
+        $ref: '#/definitions/models.Brand'
+      brand_id:
+        example: 1
+        type: integer
+      category:
+        $ref: '#/definitions/models.Category'
+      category_id:
+        example: 2
+        type: integer
+      cover_image:
+        example: https://example.com/iphone14.jpg
+        type: string
+      created_at:
+        example: "2025-07-09T15:04:05Z"
+        type: string
+      description:
+        example: Latest Apple smartphone...
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: iPhone 14
+        maxLength: 100
+        minLength: 2
+        type: string
+      price:
+        example: 999.99
+        type: number
+      updated_at:
+        example: "2025-07-09T15:04:05Z"
+        type: string
+    required:
+    - brand_id
+    - category_id
+    - cover_image
+    - description
+    - name
+    - price
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: A simple GoFiber + GORM + Swagger API for managing products, categories,
+    and brands.
+  title: Product Catalog API
+  version: "1.0"
+paths:
+  /brands:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all brands
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all brands
+      tags:
+      - Brands
+    post:
+      consumes:
+      - application/json
+      description: Create a brand entry
+      parameters:
+      - description: Brand JSON
+        in: body
+        name: brand
+        required: true
+        schema:
+          $ref: '#/definitions/models.Brand'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create a new brand
+      tags:
+      - Brands
+  /brands/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a brand by ID
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Delete a brand
+      tags:
+      - Brands
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single brand by ID
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get brand by ID
+      tags:
+      - Brands
+    put:
+      consumes:
+      - application/json
+      description: Update an existing brand's data
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Brand JSON
+        in: body
+        name: brand
+        required: true
+        schema:
+          $ref: '#/definitions/models.Brand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update a brand by ID
+      tags:
+      - Brands
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all product categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all categories
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: Create a product category
+      parameters:
+      - description: Category JSON
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create a new category
+      tags:
+      - Categories
+  /categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product category
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Delete a category by ID
+      tags:
+      - Categories
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single category by its ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get category by ID
+      tags:
+      - Categories
+    put:
+      consumes:
+      - application/json
+      description: Update an existing product category
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Category JSON
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update a category by ID
+      tags:
+      - Categories
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of products with pagination and relations
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all products with pagination
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Create a product with Category and Brand references
+      parameters:
+      - description: Product JSON
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create a new product
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product from the catalog by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Delete a product by ID
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a product with its Category and Brand by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get a single product by ID
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: Update a product by ID with new details
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product JSON
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update an existing product
+      tags:
+      - Products
+swagger: "2.0"
